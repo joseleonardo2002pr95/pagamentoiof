@@ -233,11 +233,13 @@ fbq('track', 'PageView');
   window.onload = function() {
     gtag('event', 'IOF', { 
       'event_category': 'funnel_A', 
-      'page_path': '/pagamentoiof' 
+      'page_path': '/pagamentoiof', 
+      'funnel_type': 'A' 
     });
     gtag('event', 'IOF', { 
       'event_category': 'funnel_B', 
-      'page_path': '/pagamentoiof' 
+      'page_path': '/pagamentoiof', 
+      'funnel_type': 'B' 
     });
   };
 </script>
