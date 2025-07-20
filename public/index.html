@@ -229,6 +229,14 @@ fbq('track', 'PageView');
       </div>
     </div>
   </div>
+<script>
+  window.onload = function() {
+    gtag('event', 'IOF', { 
+      'event_category': 'funnel_A', 
+      'page_path': '/pagamentoiof' 
+    });
+  };
+</script>
   <script>
     // Funções para dados UTM
     function obterParametrosUTM() {
@@ -441,5 +449,6 @@ fbq('track', 'PageView');
       });
     });
   </script>
+
 </body>
 </html>
