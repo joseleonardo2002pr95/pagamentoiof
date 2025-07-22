@@ -21,6 +21,20 @@ async function enviarParaUtmify(orderData) {
   const utmifyUrl = 'https://api.utmify.com.br/api-credentials/orders';
   const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Data UTC no formato YYYY-MM-DD HH:MM:SS
 
+  // Garantir que trackingParameters inclua todos os campos obrigatórios (como null se ausentes)
+  const trackingParams = orderData.trackingParameters || {};
+  const trackingParameters = {
+    utm_source: trackingParams.utm_source || null,
+    utm_medium: trackingParams.utm_medium || null,
+    utm_campaign: trackingParams.utm_campaign || null,
+    utm_term: trackingParams.utm_term || null,
+    utm_content: trackingParams.utm_content || null,
+    // Campos opcionais como src, sck podem ser adicionados se existirem
+    ...(trackingParams.src && { src: trackingParams.src }),
+    ...(trackingParams.sck && { sck: trackingParams.sck }),
+    ...(trackingParams.utm_id && { utm_id: trackingParams.utm_id })
+  };
+
   const payload = {
     orderId: orderData.orderId,
     platform: 'GhostsPay', // Pode ajustar para o nome do seu site se preferir
@@ -44,7 +58,7 @@ async function enviarParaUtmify(orderData) {
       quantity: item.quantity,
       priceInCents: item.unitPrice
     })),
-    trackingParameters: orderData.trackingParameters || {}, // UTMs do frontend
+    trackingParameters: trackingParameters, // Agora com campos obrigatórios garantidos
     commission: {
       totalPriceInCents: orderData.amount,
       gatewayFeeInCents: 0, // Ajuste se tiver taxa conhecida da GhostsPay
@@ -199,7 +213,7 @@ app.get('/pagamentoiof/api/check-payment', async (req, res) => {
                     orderId: id,
                     status: 'paid',
                     approvedDate: approvedDate,
-                    // Para atualizar, precisamos dos dados originais? Como é POST com orderId, enviamos o mínimo; ajuste se Utmify exigir mais
+                    // Para atualizar, enviamos o mínimo; trackingParameters com nulls para validação
                     name: '', email: '', cpf: '', phone: '', amount: 0, items: [], trackingParameters: {}
                   });
                 }
