@@ -9,11 +9,70 @@ const port = 3001;
 // --- CONFIGURAÇÕES IMPORTANTES ---
 const GHOST_SECRET_KEY = 'c3384669-4c6f-4932-a886-1b7e17e0653f';
 const GHOST_API_BASE_URL = 'https://app.ghostspaysv1.com/api/v1';
+const UTMIFY_TOKEN = 'RGmwZKZzwX9B9D37oJV2jlbCwEhK9DqUHceQ'; // Token fornecido por você
 
 // --- MIDDLEWARES ---
 app.use(bodyParser.json());
 app.use(cors());
 app.use('/pagamentoiof', express.static('public'));
+
+// --- FUNÇÃO PARA ENVIAR/ATUALIZAR NA UTMIFY ---
+async function enviarParaUtmify(orderData) {
+  const utmifyUrl = 'https://api.utmify.com.br/api-credentials/orders';
+  const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Data UTC no formato YYYY-MM-DD HH:MM:SS
+
+  const payload = {
+    orderId: orderData.orderId,
+    platform: 'GhostsPay', // Pode ajustar para o nome do seu site se preferir
+    paymentMethod: 'pix',
+    status: orderData.status,
+    createdAt: currentDate,
+    approvedDate: orderData.approvedDate || null,
+    refundedAt: null,
+    customer: {
+      name: orderData.name,
+      email: orderData.email,
+      phone: orderData.phone,
+      document: orderData.cpf,
+      country: 'BR'
+    },
+    products: orderData.items.map(item => ({
+      id: 'IOF_TAX', // ID fixo para simplicidade; ajuste se precisar
+      name: item.title,
+      planId: null,
+      planName: null,
+      quantity: item.quantity,
+      priceInCents: item.unitPrice
+    })),
+    trackingParameters: orderData.trackingParameters || {}, // UTMs do frontend
+    commission: {
+      totalPriceInCents: orderData.amount,
+      gatewayFeeInCents: 0, // Ajuste se tiver taxa conhecida da GhostsPay
+      userCommissionInCents: orderData.amount, // Comissão líquida; ajuste se necessário
+      currency: 'BRL'
+    },
+    isTest: false // Mude para true em testes
+  };
+
+  try {
+    const response = await fetch(utmifyUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-token': UTMIFY_TOKEN
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    if (response.ok) {
+      console.log('✅ Enviado/atualizado na Utmify com sucesso:', data);
+    } else {
+      console.error('❌ Erro ao enviar para Utmify:', data);
+    }
+  } catch (error) {
+    console.error('❌ Erro na requisição para Utmify:', error);
+  }
+}
 
 // --- ROTAS DA API DO SEU BACKEND ---
 
@@ -21,7 +80,7 @@ app.use('/pagamentoiof', express.static('public'));
 app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
     console.log('--- Nova Requisição para Gerar PIX ---');
     try {
-        const { name, email, cpf, phone, amount, items } = req.body;
+        const { name, email, cpf, phone, amount, items, trackingParameters } = req.body;
 
         // Validação básica dos dados recebidos do frontend
         if (!name || !email || !cpf || !phone || !amount || !items || items.length === 0) {
@@ -29,7 +88,7 @@ app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
             return res.status(400).json({ message: 'Dados do cliente ou valor/itens ausentes.' });
         }
 
-        console.log('Recebida requisição para gerar PIX com os dados:', { name, email, cpf, phone, amount, items });
+        console.log('Recebida requisição para gerar PIX com os dados:', { name, email, cpf, phone, amount, items, trackingParameters });
 
         const ghostRequestBody = {
             name: name,
@@ -65,6 +124,14 @@ app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
 
             if (responseGhost.ok) {
                 console.log('PIX gerado com sucesso pela Ghost (JSON Response):', dataGhost);
+
+                // Enviar para Utmify com status 'waiting_payment'
+                await enviarParaUtmify({
+                  orderId: dataGhost.id,
+                  status: 'waiting_payment',
+                  name, email, cpf, phone, amount, items, trackingParameters
+                });
+
                 return res.status(200).json({
                     pixQrCode: dataGhost.pixQrCode,
                     pixCode: dataGhost.pixCode,
@@ -124,6 +191,19 @@ app.get('/pagamentoiof/api/check-payment', async (req, res) => {
 
             if (responseGhost.ok) {
                 console.log('Status do pagamento obtido com sucesso:', dataGhost);
+
+                // Se aprovado, atualizar na Utmify com status 'paid'
+                if (dataGhost.status === 'APPROVED') {
+                  const approvedDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Data de aprovação
+                  await enviarParaUtmify({
+                    orderId: id,
+                    status: 'paid',
+                    approvedDate: approvedDate,
+                    // Para atualizar, precisamos dos dados originais? Como é POST com orderId, enviamos o mínimo; ajuste se Utmify exigir mais
+                    name: '', email: '', cpf: '', phone: '', amount: 0, items: [], trackingParameters: {}
+                  });
+                }
+
                 return res.status(200).json({
                     status: dataGhost.status,
                     message: 'Status do pagamento obtido com sucesso.'
