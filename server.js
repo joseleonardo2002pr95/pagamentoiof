@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const fetch = require('node-fetch');
+const path = require('path');
 
 const app = express();
 const port = 3001;
@@ -12,9 +13,29 @@ const GHOST_API_BASE_URL = 'https://app.ghostspaysv1.com/api/v1';
 const UTMIFY_TOKEN = 'RGmwZKZzwX9B9D37oJV2jlbCwEhK9DqUHceQ';
 const orderStore = {}; // Armazenamento temporário em memória
 
+// Middlewares
+app.use(bodyParser.json());
+app.use(cors());
+
+// Servir arquivos estáticos da pasta 'public' sob o caminho '/pagamentoiof'
+app.use('/pagamentoiof', express.static(path.join(__dirname, 'public'), {
+  extensions: ['html'],
+  index: 'index.html'
+}));
+
+// Rota explícita para garantir que /pagamentoiof sirva index.html
+app.get('/pagamentoiof', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
+    if (err) {
+      console.error('Erro ao servir index.html:', err);
+      res.status(500).send('Erro ao carregar a página.');
+    }
+  });
+});
+
 // Função para enviar/atualizar na Utmify
 async function enviarParaUtmify(orderData) {
-  const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Definir currentDate aqui
+  const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const utmifyUrl = 'https://api.utmify.com.br/api-credentials/orders';
 
   const trackingParams = orderData.trackingParameters || {};
@@ -58,7 +79,7 @@ async function enviarParaUtmify(orderData) {
     isTest: false
   };
 
-  const method = orderData.status === 'paid' ? 'PUT' : 'POST'; // Usar PUT para atualizações
+  const method = orderData.status === 'paid' ? 'PUT' : 'POST';
   try {
     const response = await fetch(utmifyUrl, {
       method: method,
@@ -120,16 +141,19 @@ app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
     }
 
     if (responseGhost.ok) {
-      const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Definir currentDate localmente
-      // Armazenar os dados do pedido
+      const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
       orderStore[dataGhost.id] = { name, email, cpf, phone, amount, items, trackingParameters, createdAt: currentDate };
 
-      // Enviar para Utmify com status 'waiting_payment'
       await enviarParaUtmify({
         orderId: dataGhost.id,
         status: 'waiting_payment',
         ...orderStore[dataGhost.id]
       });
+
+      if (!dataGhost.pixQrCode || !dataGhost.pixCode) {
+        console.error('Resposta da GhostsPay incompleta:', dataGhost);
+        return res.status(500).json({ message: 'Dados do PIX não retornados pela API externa.' });
+      }
 
       return res.status(200).json({
         pixQrCode: dataGhost.pixQrCode,
