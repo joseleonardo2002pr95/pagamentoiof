@@ -12,15 +12,10 @@ const GHOST_API_BASE_URL = 'https://app.ghostspaysv1.com/api/v1';
 const UTMIFY_TOKEN = 'RGmwZKZzwX9B9D37oJV2jlbCwEhK9DqUHceQ';
 const orderStore = {}; // Armazenamento temporário em memória
 
-// Middlewares
-app.use(bodyParser.json());
-app.use(cors());
-app.use('/pagamentoiof', express.static('public'));
-
 // Função para enviar/atualizar na Utmify
 async function enviarParaUtmify(orderData) {
+  const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Definir currentDate aqui
   const utmifyUrl = 'https://api.utmify.com.br/api-credentials/orders';
-  const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   const trackingParams = orderData.trackingParameters || {};
   const trackingParameters = {
@@ -125,6 +120,7 @@ app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
     }
 
     if (responseGhost.ok) {
+      const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Definir currentDate localmente
       // Armazenar os dados do pedido
       orderStore[dataGhost.id] = { name, email, cpf, phone, amount, items, trackingParameters, createdAt: currentDate };
 
@@ -184,7 +180,7 @@ app.get('/pagamentoiof/api/check-payment', async (req, res) => {
 
       if (dataGhost.status === 'APPROVED') {
         const approvedDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        const orderData = orderStore[id] || {}; // Recuperar dados do pedido
+        const orderData = orderStore[id] || {};
         if (Object.keys(orderData).length === 0) {
           console.error(`❌ Dados do pedido não encontrados para orderId: ${id}`);
           return res.status(500).json({ message: 'Dados do pedido não encontrados.' });
