@@ -67,7 +67,9 @@ async function enviarParaUtmify(orderData) {
       id: 'IOF_TAX',
       name: item.title,
       quantity: item.quantity,
-      priceInCents: item.unitPrice
+      priceInCents: item.unitPrice,
+      planId: null, // Adicionado para atender ao requisito da Utmify
+      planName: 'Taxa IOF' // Adicionado um valor padrão, ajuste se necessário
     })) : [],
     trackingParameters: trackingParameters,
     commission: {
