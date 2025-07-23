@@ -10,7 +10,7 @@ const port = 3001;
 // Configurações
 const GHOST_SECRET_KEY = 'c3384669-4c6f-4932-a886-1b7e17e0653f';
 const GHOST_API_BASE_URL = 'https://app.ghostspaysv1.com/api/v1';
-const UTMIFY_TOKEN = 'RGmwZKZzwX9B9D37oJV2jlbCwEhK9DqUHceQ';
+const UTMIFY_TOKEN = 'RGmwZKZzwX9B9D37oJV2jlbCwEhK9DqUHceQ'; // Verifique se esse token está correto
 const orderStore = {}; // Armazenamento temporário em memória
 
 // Middlewares
@@ -69,7 +69,7 @@ async function enviarParaUtmify(orderData) {
       quantity: item.quantity,
       priceInCents: item.unitPrice,
       planId: null, // Adicionado para atender ao requisito da Utmify
-      planName: 'Taxa IOF' // Adicionado um valor padrão, ajuste se necessário
+      planName: 'Taxa IOF' // Adicionado um valor padrão
     })) : [],
     trackingParameters: trackingParameters,
     commission: {
@@ -81,13 +81,14 @@ async function enviarParaUtmify(orderData) {
     isTest: false
   };
 
+  console.log('Enviando para Utmify - Token:', UTMIFY_TOKEN); // Log para depuração
   const method = orderData.status === 'paid' ? 'PUT' : 'POST';
   try {
     const response = await fetch(utmifyUrl, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'x-api-token': UTMIFY_TOKEN
+        'x-api-token': UTMIFY_TOKEN // Certifique-se de que o token está correto
       },
       body: JSON.stringify(payload)
     });
