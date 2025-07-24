@@ -68,8 +68,8 @@ async function enviarParaUtmify(orderData) {
       name: item.title,
       quantity: item.quantity,
       priceInCents: item.unitPrice,
-      planId: null, // Adicionado para atender ao requisito da Utmify
-      planName: 'Taxa IOF' // Adicionado um valor padrão
+      planId: null,
+      planName: 'Taxa IOF'
     })) : [],
     trackingParameters: trackingParameters,
     commission: {
@@ -88,7 +88,8 @@ async function enviarParaUtmify(orderData) {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'x-api-token': UTMIFY_TOKEN // Certifique-se de que o token está correto
+        'Authorization': `Bearer ${UTMIFY_TOKEN}` // Tentativa com formato Bearer
+        // 'x-api-token': UTMIFY_TOKEN // Comente esta linha para testar o Bearer
       },
       body: JSON.stringify(payload)
     });
