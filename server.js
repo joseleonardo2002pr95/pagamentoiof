@@ -88,8 +88,8 @@ async function enviarParaUtmify(orderData) {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${UTMIFY_TOKEN}` // Tentativa com formato Bearer
-        // 'x-api-token': UTMIFY_TOKEN // Comente esta linha para testar o Bearer
+        'x-api-token': UTMIFY_TOKEN // Revertido para o cabeçalho correto
+        // 'Authorization': `Bearer ${UTMIFY_TOKEN}` // Comente esta linha
       },
       body: JSON.stringify(payload)
     });
