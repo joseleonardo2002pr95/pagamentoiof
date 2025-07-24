@@ -81,15 +81,15 @@ async function enviarParaUtmify(orderData) {
     isTest: false
   };
 
-  console.log('Enviando para Utmify - Token:', UTMIFY_TOKEN); // Log para depuração
-  const method = orderData.status === 'paid' ? 'PUT' : 'POST';
+  console.log('Enviando para Utmify - Método:', orderData.status, 'Token:', UTMIFY_TOKEN, 'Headers:', { 'x-api-token': UTMIFY_TOKEN }); // Log detalhado
+  const method = 'POST'; // Testando com POST para ambas as operações
+  // const method = orderData.status === 'paid' ? 'PATCH' : 'POST'; // Alternativa comentada para testar PATCH, se indicado na documentação
   try {
     const response = await fetch(utmifyUrl, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        'x-api-token': UTMIFY_TOKEN // Revertido para o cabeçalho correto
-        // 'Authorization': `Bearer ${UTMIFY_TOKEN}` // Comente esta linha
+        'x-api-token': UTMIFY_TOKEN
       },
       body: JSON.stringify(payload)
     });
