@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fetch = require('node-fetch');
 const path = require('path');
-
 const app = express();
 const port = 3001;
 
@@ -37,7 +36,6 @@ app.get('/pagamentoiof', (req, res) => {
 async function enviarParaUtmify(orderData) {
   const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const utmifyUrl = 'https://api.utmify.com.br/api-credentials/orders';
-
   const trackingParams = orderData.trackingParameters || {};
   const trackingParameters = {
     utm_source: trackingParams.utm_source || null,
@@ -47,7 +45,6 @@ async function enviarParaUtmify(orderData) {
     utm_content: trackingParams.utm_content || null,
     ...(trackingParams.utm_id && { utm_id: trackingParams.utm_id })
   };
-
   const payload = {
     orderId: orderData.orderId,
     platform: 'GhostsPay',
@@ -80,7 +77,6 @@ async function enviarParaUtmify(orderData) {
     },
     isTest: false
   };
-
   console.log('Enviando para Utmify - Método:', orderData.status, 'Token:', UTMIFY_TOKEN, 'Headers:', { 'x-api-token': UTMIFY_TOKEN }); // Log detalhado
   const method = 'POST'; // Testando com POST para ambas as operações
   // const method = orderData.status === 'paid' ? 'PATCH' : 'POST'; // Alternativa comentada para testar PATCH, se indicado na documentação
@@ -93,7 +89,6 @@ async function enviarParaUtmify(orderData) {
       },
       body: JSON.stringify(payload)
     });
-
     const data = await response.json();
     if (!response.ok) {
       console.error(`❌ Erro ao enviar para Utmify (${method}):`, {
@@ -116,16 +111,13 @@ app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
   console.log('--- Nova Requisição para Gerar PIX ---');
   try {
     const { name, email, cpf, phone, amount, items, trackingParameters } = req.body;
-
     if (!name || !email || !cpf || !phone || !amount || !items || items.length === 0) {
       console.warn('Requisição de PIX inválida: dados ausentes ou incompletos.', req.body);
       return res.status(400).json({ message: 'Dados do cliente ou valor/itens ausentes.' });
     }
-
     const ghostRequestBody = {
       name, email, cpf, phone, paymentMethod: "PIX", amount, traceable: true, items
     };
-
     const responseGhost = await fetch(`${GHOST_API_BASE_URL}/transaction.purchase`, {
       method: 'POST',
       headers: {
@@ -134,7 +126,6 @@ app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
       },
       body: JSON.stringify(ghostRequestBody)
     });
-
     const responseText = await responseGhost.text();
     let dataGhost;
     try {
@@ -143,22 +134,18 @@ app.post('/pagamentoiof/api/gerar-pix', async (req, res) => {
       console.error('ERRO: Falha ao parsear a resposta da Ghost API como JSON.', jsonParseError);
       return res.status(500).json({ message: 'Resposta inválida da API externa.' });
     }
-
     if (responseGhost.ok) {
       const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
       orderStore[dataGhost.id] = { name, email, cpf, phone, amount, items, trackingParameters, createdAt: currentDate };
-
       await enviarParaUtmify({
         orderId: dataGhost.id,
         status: 'waiting_payment',
         ...orderStore[dataGhost.id]
       });
-
       if (!dataGhost.pixQrCode || !dataGhost.pixCode) {
         console.error('Resposta da GhostsPay incompleta:', dataGhost);
         return res.status(500).json({ message: 'Dados do PIX não retornados pela API externa.' });
       }
-
       return res.status(200).json({
         pixQrCode: dataGhost.pixQrCode,
         pixCode: dataGhost.pixCode,
@@ -180,12 +167,10 @@ app.get('/pagamentoiof/api/check-payment', async (req, res) => {
   console.log('--- Nova Requisição para Verificar Status do Pagamento ---');
   try {
     const { id } = req.query;
-
     if (!id) {
       console.warn('Requisição de verificação de pagamento inválida: ID da transação ausente.');
       return res.status(400).json({ message: 'ID da transação é obrigatório.' });
     }
-
     const responseGhost = await fetch(`${GHOST_API_BASE_URL}/transaction.getPayment?id=${id}`, {
       method: 'GET',
       headers: {
@@ -193,7 +178,6 @@ app.get('/pagamentoiof/api/check-payment', async (req, res) => {
         'Authorization': GHOST_SECRET_KEY
       }
     });
-
     const responseText = await responseGhost.text();
     let dataGhost;
     try {
@@ -202,10 +186,8 @@ app.get('/pagamentoiof/api/check-payment', async (req, res) => {
       console.error('ERRO: Falha ao parsear a resposta da Ghost API como JSON.', jsonParseError);
       return res.status(500).json({ message: 'Resposta inválida da API externa.' });
     }
-
     if (responseGhost.ok) {
       console.log('Status do pagamento obtido com sucesso:', dataGhost);
-
       if (dataGhost.status === 'APPROVED') {
         const approvedDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
         const orderData = orderStore[id] || {};
@@ -223,7 +205,6 @@ app.get('/pagamentoiof/api/check-payment', async (req, res) => {
           console.warn('Falha ao atualizar o status na Utmify, mas prosseguindo com a resposta.');
         }
       }
-
       return res.status(200).json({
         status: dataGhost.status,
         message: 'Status do pagamento obtido com sucesso.'
